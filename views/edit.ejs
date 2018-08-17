@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理系统</title>
+</head>
+
+<link rel="stylesheet" type="text/css" href="/users/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+
+<body>
+    <div class="panel panel-default">
+<div class="panel-heading">
+            <h3 class="panel-title">编辑用户</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group" style="display: none;">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" class="form-control" name='id' value='<%= id %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='name' value='<%= name %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='gender' value='<%= gender %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">部门</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='apartment' value='<%= apartment %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">住址</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='address' value='<%= address %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">联系方式</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='mobilePhone' value='<%= mobilePhone %>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">入职日期</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name='hiredate' value='<%= hiredate %>'>
+                    </div>
+                </div>
+                <div class="col-sm-offset-3 col-sm-2">
+                    <button type="submit" data-toggle="modal" class='btn btn-block btn-info'>提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="/users/node_modules/art-template/lib/template-web.js"></script>
+<script type="text/javascript" src="/users/node_modules/jquery/dist/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+    $('form').on('submit', function() {
+        var data = $(this).serialize();
+        $.ajax({
+            url: '/edit',
+            type: 'post',
+            data: data,
+            success: function(res) {
+                if (res.err_code == 0) {
+                    location.href = '/'
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+        return false;
+    })
+</script>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理系统</title>
+</head>
+<link rel="stylesheet" type="text/css" href="/users/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+<body>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">人员名单</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-offset-11 col-sm-1" style="margin-bottom: 10px;">
+                <button type="button" data-toggle="modal" data-target="#addModal" class='btn btn-block btn-success'>添加</button>
+            </div>
+            <table class='table table-bordered table-hover'>
+                <thead>
+                    <tr class='success'>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>部门</th>
+                        <th>住址</th>
+                        <th>联系方式</th>
+                        <th>入职时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% list.forEach(item=>{ %>
+                        <tr>
+                            <td><%= item.name %></td>
+                            <td><%= item.gender %></td>
+                            <td><%= item.apartment %></td>
+                            <td><%= item.address %></td>
+                            <td><%= item.mobilePhone %></td>
+                            <td><%= item.hiredate %></td>
+                            <td>
+                                <a href="/info?id=<%= item.id %>">查看</a>
+                                <a href="/edit?id=<%= item.id %>">编辑</a>
+                                <a href="/delete?id=<%= item.id %>" class='del'>删除</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <div class="modal fade" tabindex="-1" role="dialog" id='addModal'>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">添加用户</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <!--<input type="hidden" class="form-control" name='id'>-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">姓名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='name'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">性别</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='gender'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">部门</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='apartment'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">住址</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='address'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">联系方式</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='mobilePhone'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">入职时间</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name='hiredate'>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-10 col-sm-2">
+                                        <button type="submit" class="btn btn-info">提交</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="/users/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/users/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/users/node_modules/art-template/lib/template-web.js"></script>
+<script type="text/html" id='addTpl'>
+    {{each list}}
+    <tr>
+        <td>{{$value.name}}</td>
+        <td>{{$value.gender}}</td>
+        <td>{{$value.apartment}}</td>
+        <td>{{$value.address}}</td>
+        <td>{{$value.mobilePhone}}</td>
+        <td>{{$value.hiredate}}</td>
+        <td>
+            <a href="/info?id={{$value.id}}">查看</a>
+            <a href="/edit?id={{$value.id}}">编辑</a>
+            <a href="/delete?id={{$value.id}}" class='del'>删除</a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    $(function() {
+        $('form').on('submit', function(e) {
+            $.post('/addNewUser', $(this).serialize(), function(res) {
+                if (res.err_code == 0) {
+                    var html = template('addTpl', res);
+                    $('tbody').html(html);
+                    $('#addModal').modal('hide');
+                } else {
+                    alert(res.msg);
+                }
+            }, 'json')
+            return false;
+        });
+
+        $('tbody').on('click', '.del', function(e) {
+            e.preventDefault()
+            $.get($(this).attr('href'), function(res) {
+                if (res.err_code == 0) {
+                    var html = template('addTpl', res);
+                    $('tbody').html(html);
+                } else {
+                    alert(res.msg);
+                }
+            });
+        })
+    })
+</script>
